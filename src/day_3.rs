@@ -8,32 +8,35 @@ fn get_input() -> Vec<String> {
         .collect()
 }
 
-fn max_joltage(bank: &str) -> u32 {
+fn max_joltage(bank: &str, n_digits: usize) -> usize {
     let chars = bank.chars();
-    let digits = chars.map(|c| c.to_digit(10).unwrap()).collect::<Vec<u32>>();
-    let max_digit = *digits.iter().max().unwrap();
-    for i in 0..max_digit {
-        let digit = max_digit - i;
-        let idx_opt = digits.iter().position(|&n| n == digit);
-        if let Some(idx) = idx_opt {
-            if idx == digits.len() - 1 {
-                // This digit is at the end, so we can't make a joltage with it
-                continue;
-            }
-            let next_digit = *digits[(idx + 1)..].iter().max().unwrap();
-            return 10 * digit + next_digit;
-        } else {
-            continue;
-        }
+    let digits = chars
+        .map(|c| c.to_digit(10).unwrap() as usize)
+        .collect::<Vec<usize>>();
+    let mut max_digit = *digits.iter().max().unwrap();
+    if n_digits == 1 {
+        return max_digit;
     }
-    unreachable!("Should have exited the loop at some point");
+    loop {
+        let pos_opt = digits.iter().position(|&n| n == max_digit);
+        if let Some(pos) = pos_opt {
+            // Are there enough digits after this point to form a number?
+            if digits.len() - pos >= n_digits {
+                // Yes, there are
+                let result = (max_digit * 10usize.pow(n_digits as u32 - 1))
+                    + max_joltage(&bank[(pos + 1)..], n_digits - 1);
+                return result
+            }
+        }
+        max_digit -= 1;
+    }
 }
 
-fn total_max_joltage(banks: &[String]) -> u32 {
-    banks.iter().map(|b| max_joltage(b)).sum()
+fn total_max_joltage(banks: &[String], n_digits: usize) -> usize {
+    banks.iter().map(|b| max_joltage(b, n_digits)).sum()
 }
 
 pub fn part_1() {
     let banks = get_input();
-    println!("The maximum possible total joltage is {}", total_max_joltage(&banks));
+    println!("The maximum possible total joltage is {}", total_max_joltage(&banks, 2));
 }
