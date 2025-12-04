@@ -32,11 +32,9 @@ fn click_left(dial: &mut usize, zero_count: &mut usize) {
 fn click_right(dial: &mut usize, zero_count: &mut usize) {
     if *dial < 99 {
         *dial += 1;
-        if *dial == 0 {
-            *zero_count += 1;
-        }
     } else {
         *dial = 0;
+        *zero_count += 1;
     }
 }
 
@@ -52,7 +50,7 @@ fn apply_rotation(dial: &mut usize, rotation: isize, zero_count: &mut usize) {
     }
 }
 
-fn how_many_zeroes(rotations: &[isize]) -> usize {
+fn _how_many_zeroes(rotations: &[isize]) -> usize {
     let mut result: usize = 0;
     let mut _zero_count: usize = 0;
     let mut dial: usize = 50;
@@ -65,7 +63,21 @@ fn how_many_zeroes(rotations: &[isize]) -> usize {
     result
 }
 
-pub fn part_1() {
+fn how_many_zero_clicks(rotations: &[isize]) -> usize {
+    let mut zero_count: usize = 0;
+    let mut dial: usize = 50;
+    for rotation in rotations {
+        apply_rotation(&mut dial, *rotation, &mut zero_count);
+    }
+    zero_count
+}
+
+pub fn _part_1() {
     let input = get_input();
-    println!("Lands on zero {} times", how_many_zeroes(&input));
+    println!("Lands on zero {} times", _how_many_zeroes(&input));
+}
+
+pub fn part_2() {
+    let input = get_input();
+    println!("Clicks past zero {} times", how_many_zero_clicks(&input));
 }
