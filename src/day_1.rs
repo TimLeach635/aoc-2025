@@ -18,22 +18,46 @@ fn get_input() -> Vec<isize> {
         .collect()
 }
 
-fn apply_rotation(dial: &mut usize, rotation: isize) {
-    let mut result: isize = *dial as isize + rotation;
-    while result < 0 {
-        result += 100;
+fn click_left(dial: &mut usize, zero_count: &mut usize) {
+    if *dial > 0 {
+        *dial -= 1;
+        if *dial == 0 {
+            *zero_count += 1;
+        }
+    } else {
+        *dial = 99;
     }
-    while result > 99 {
-        result -= 100;
+}
+
+fn click_right(dial: &mut usize, zero_count: &mut usize) {
+    if *dial < 99 {
+        *dial += 1;
+        if *dial == 0 {
+            *zero_count += 1;
+        }
+    } else {
+        *dial = 0;
     }
-    *dial = result.try_into().expect("Should be able to convert to usize");
+}
+
+fn apply_rotation(dial: &mut usize, rotation: isize, zero_count: &mut usize) {
+    if rotation > 0 {
+        for _ in 0..rotation {
+            click_right(dial, zero_count);
+        }
+    } else {
+        for _ in 0..-rotation {
+            click_left(dial, zero_count);
+        }
+    }
 }
 
 fn how_many_zeroes(rotations: &[isize]) -> usize {
     let mut result: usize = 0;
+    let mut _zero_count: usize = 0;
     let mut dial: usize = 50;
     for rotation in rotations {
-        apply_rotation(&mut dial, *rotation);
+        apply_rotation(&mut dial, *rotation, &mut _zero_count);
         if dial == 0 {
             result += 1;
         }
