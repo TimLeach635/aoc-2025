@@ -20,10 +20,23 @@ fn is_valid(id: usize) -> bool {
     // Number of digits
     let n = id.ilog10() + 1;
     let n_2 = n / 2;
-    let t = 10u32.pow(n_2);
-    let first_half = id / (t as usize);
-    let second_half = id % (t as usize);
-    first_half != second_half
+    for i in 1..=n_2 {
+        // Does this sequence length evenly divide?
+        if n % i != 0 {
+            continue;
+        }
+        let t = 10u32.pow(i);
+        let seq = id % (t as usize);
+        let mut rep = seq;
+        for _ in 1..(n / i) {
+            rep *= t as usize;
+            rep += seq;
+        }
+        if rep == id {
+            return false
+        }
+    }
+    true
 }
 
 fn invalid_ids_in_range(first: usize, last: usize) -> Vec<usize> {
@@ -36,7 +49,7 @@ fn invalid_ids_in_ranges(ranges: &[(usize, usize)]) -> Vec<usize> {
         .collect()
 }
 
-pub fn part_1() {
+pub fn part_2() {
     let input = get_input();
     println!("The sum of the invalid ids is {}", invalid_ids_in_ranges(&input).iter().sum::<usize>());
 }
