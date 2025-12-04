@@ -38,11 +38,41 @@ fn is_accessible(paper: &HashSet<(isize, isize)>, row: isize, col: isize) -> boo
         .count() < 4
 }
 
-fn count_accessible(paper: &HashSet<(isize, isize)>) -> usize {
+fn _count_accessible(paper: &HashSet<(isize, isize)>) -> usize {
     paper.iter().filter(|coords| is_accessible(paper, coords.0, coords.1)).count()
 }
 
-pub fn part_1() {
+fn remove_accessible(paper: &mut HashSet<(isize, isize)>) -> usize {
+    let mut to_remove = Vec::new();
+    for coords in paper.iter() {
+        if is_accessible(paper, coords.0, coords.1) {
+            to_remove.push(*coords);
+        }
+    }
+    for coords in to_remove.iter() {
+        paper.remove(&coords);
+    }
+    to_remove.len()
+}
+
+fn remove_as_much_as_possible(paper: &mut HashSet<(isize, isize)>) -> usize {
+    let mut removed = 0;
+    loop {
+        let removed_this_loop = remove_accessible(paper);
+        removed += removed_this_loop;
+        if removed_this_loop == 0 {
+            break;
+        }
+    }
+    removed
+}
+
+pub fn _part_1() {
     let paper = get_input();
-    println!("{} rolls are accessible", count_accessible(&paper));
+    println!("{} rolls are accessible", _count_accessible(&paper));
+}
+
+pub fn part_2() {
+    let mut paper = get_input();
+    println!("{} rolls can be removed", remove_as_much_as_possible(&mut paper));
 }
