@@ -1,7 +1,7 @@
 use std::fs;
 use fancy_regex::Regex;
 
-fn get_input() -> Vec<(usize, usize)> {
+fn _get_input() -> Vec<(usize, usize)> {
     let re = Regex::new(r"(?<first>\d+)-(?<last>\d+)")
         .expect("Should be able to create regex");
     fs::read_to_string("C:\\NotWork\\advent-of-code\\aoc-2025\\src\\day_2\\input.txt")
@@ -16,7 +16,7 @@ fn get_input() -> Vec<(usize, usize)> {
         .collect()
 }
 
-fn is_valid(id: usize) -> bool {
+fn _is_valid(id: usize) -> bool {
     // Number of digits
     let n = id.ilog10() + 1;
     let n_2 = n / 2;
@@ -39,17 +39,17 @@ fn is_valid(id: usize) -> bool {
     true
 }
 
-fn invalid_ids_in_range(first: usize, last: usize) -> Vec<usize> {
-    (first..=last).filter(|i| !is_valid(*i)).collect()
+fn _invalid_ids_in_range(first: usize, last: usize) -> Vec<usize> {
+    (first..=last).filter(|i| !_is_valid(*i)).collect()
 }
 
-fn invalid_ids_in_ranges(ranges: &[(usize, usize)]) -> Vec<usize> {
+fn _invalid_ids_in_ranges(ranges: &[(usize, usize)]) -> Vec<usize> {
     ranges.iter()
-        .flat_map(|r| invalid_ids_in_range(r.0, r.1))
+        .flat_map(|r| _invalid_ids_in_range(r.0, r.1))
         .collect()
 }
 
-pub fn part_2() {
-    let input = get_input();
-    println!("The sum of the invalid ids is {}", invalid_ids_in_ranges(&input).iter().sum::<usize>());
+pub fn _part_2() {
+    let input = _get_input();
+    println!("The sum of the invalid ids is {}", _invalid_ids_in_ranges(&input).iter().sum::<usize>());
 }
