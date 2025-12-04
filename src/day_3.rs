@@ -1,6 +1,6 @@
 use std::fs;
 
-fn get_input() -> Vec<String> {
+fn _get_input() -> Vec<String> {
     fs::read_to_string("C:\\NotWork\\advent-of-code\\aoc-2025\\src\\day_3\\input.txt")
         .expect("Should be able to read the file at this location")
         .lines()
@@ -8,7 +8,7 @@ fn get_input() -> Vec<String> {
         .collect()
 }
 
-fn max_joltage(bank: &str, n_digits: usize) -> usize {
+fn _max_joltage(bank: &str, n_digits: usize) -> usize {
     let chars = bank.chars();
     let digits = chars
         .map(|c| c.to_digit(10).unwrap() as usize)
@@ -24,7 +24,7 @@ fn max_joltage(bank: &str, n_digits: usize) -> usize {
             if digits.len() - pos >= n_digits {
                 // Yes, there are
                 let result = (max_digit * 10usize.pow(n_digits as u32 - 1))
-                    + max_joltage(&bank[(pos + 1)..], n_digits - 1);
+                    + _max_joltage(&bank[(pos + 1)..], n_digits - 1);
                 return result
             }
         }
@@ -32,16 +32,16 @@ fn max_joltage(bank: &str, n_digits: usize) -> usize {
     }
 }
 
-fn total_max_joltage(banks: &[String], n_digits: usize) -> usize {
-    banks.iter().map(|b| max_joltage(b, n_digits)).sum()
+fn _total_max_joltage(banks: &[String], n_digits: usize) -> usize {
+    banks.iter().map(|b| _max_joltage(b, n_digits)).sum()
 }
 
 pub fn _part_1() {
-    let banks = get_input();
-    println!("The maximum possible total joltage is {}", total_max_joltage(&banks, 2));
+    let banks = _get_input();
+    println!("The maximum possible total joltage is {}", _total_max_joltage(&banks, 2));
 }
 
-pub fn part_2() {
-    let banks = get_input();
-    println!("The maximum possible total joltage is {}", total_max_joltage(&banks, 12));
+pub fn _part_2() {
+    let banks = _get_input();
+    println!("The maximum possible total joltage is {}", _total_max_joltage(&banks, 12));
 }
