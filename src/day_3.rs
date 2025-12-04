@@ -36,7 +36,12 @@ fn total_max_joltage(banks: &[String], n_digits: usize) -> usize {
     banks.iter().map(|b| max_joltage(b, n_digits)).sum()
 }
 
-pub fn part_1() {
+pub fn _part_1() {
     let banks = get_input();
     println!("The maximum possible total joltage is {}", total_max_joltage(&banks, 2));
+}
+
+pub fn part_2() {
+    let banks = get_input();
+    println!("The maximum possible total joltage is {}", total_max_joltage(&banks, 12));
 }
