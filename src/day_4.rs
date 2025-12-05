@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 use std::fs;
 
-fn get_input() -> HashSet<(isize, isize)> {
+fn _get_input() -> HashSet<(isize, isize)> {
     let mut input = HashSet::new();
 
     for (row, line) in fs::read_to_string("C:\\NotWork\\advent-of-code\\aoc-2025\\src\\day_4\\input.txt")
@@ -19,7 +19,7 @@ fn get_input() -> HashSet<(isize, isize)> {
     input
 }
 
-fn adjacent_positions(row: isize, col: isize) -> Vec<(isize, isize)> {
+fn _adjacent_positions(row: isize, col: isize) -> Vec<(isize, isize)> {
     let mut result = Vec::new();
     for row_offset in -1..=1 {
         for col_offset in -1..=1 {
@@ -32,20 +32,20 @@ fn adjacent_positions(row: isize, col: isize) -> Vec<(isize, isize)> {
     result
 }
 
-fn is_accessible(paper: &HashSet<(isize, isize)>, row: isize, col: isize) -> bool {
-    adjacent_positions(row, col).iter()
+fn _is_accessible(paper: &HashSet<(isize, isize)>, row: isize, col: isize) -> bool {
+    _adjacent_positions(row, col).iter()
         .filter(|coords| paper.contains(&(coords.0, coords.1)))
         .count() < 4
 }
 
 fn _count_accessible(paper: &HashSet<(isize, isize)>) -> usize {
-    paper.iter().filter(|coords| is_accessible(paper, coords.0, coords.1)).count()
+    paper.iter().filter(|coords| _is_accessible(paper, coords.0, coords.1)).count()
 }
 
-fn remove_accessible(paper: &mut HashSet<(isize, isize)>) -> usize {
+fn _remove_accessible(paper: &mut HashSet<(isize, isize)>) -> usize {
     let mut to_remove = Vec::new();
     for coords in paper.iter() {
-        if is_accessible(paper, coords.0, coords.1) {
+        if _is_accessible(paper, coords.0, coords.1) {
             to_remove.push(*coords);
         }
     }
@@ -55,10 +55,10 @@ fn remove_accessible(paper: &mut HashSet<(isize, isize)>) -> usize {
     to_remove.len()
 }
 
-fn remove_as_much_as_possible(paper: &mut HashSet<(isize, isize)>) -> usize {
+fn _remove_as_much_as_possible(paper: &mut HashSet<(isize, isize)>) -> usize {
     let mut removed = 0;
     loop {
-        let removed_this_loop = remove_accessible(paper);
+        let removed_this_loop = _remove_accessible(paper);
         removed += removed_this_loop;
         if removed_this_loop == 0 {
             break;
@@ -68,11 +68,11 @@ fn remove_as_much_as_possible(paper: &mut HashSet<(isize, isize)>) -> usize {
 }
 
 pub fn _part_1() {
-    let paper = get_input();
+    let paper = _get_input();
     println!("{} rolls are accessible", _count_accessible(&paper));
 }
 
-pub fn part_2() {
-    let mut paper = get_input();
-    println!("{} rolls can be removed", remove_as_much_as_possible(&mut paper));
+pub fn _part_2() {
+    let mut paper = _get_input();
+    println!("{} rolls can be removed", _remove_as_much_as_possible(&mut paper));
 }
