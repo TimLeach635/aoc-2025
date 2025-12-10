@@ -1,11 +1,12 @@
-use crate::day_5::part_2;
+use crate::day_6::part_1;
 
 mod day_1;
 mod day_2;
 mod day_3;
 mod day_4;
 mod day_5;
+mod day_6;
 
 fn main() {
-    part_2();
+    part_1();
 }

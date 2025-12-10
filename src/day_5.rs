@@ -1,7 +1,7 @@
-use std::fs;
 use regex::Regex;
+use std::fs;
 
-fn get_input() -> (Vec<(usize, usize)>, Vec<usize>) {
+fn _get_input() -> (Vec<(usize, usize)>, Vec<usize>) {
     let mut ranges = Vec::new();
     let mut ingredients = Vec::new();
 
@@ -12,10 +12,7 @@ fn get_input() -> (Vec<(usize, usize)>, Vec<usize>) {
         .lines()
     {
         if let Some(caps) = range_re.captures(line) {
-            ranges.push((
-                caps["start"].parse().unwrap(),
-                caps["end"].parse().unwrap()
-            ));
+            ranges.push((caps["start"].parse().unwrap(), caps["end"].parse().unwrap()));
         } else if let Ok(id) = line.parse::<usize>() {
             ingredients.push(id);
         }
@@ -24,29 +21,36 @@ fn get_input() -> (Vec<(usize, usize)>, Vec<usize>) {
     (ranges, ingredients)
 }
 
-fn lies_in_range(id: usize, start: usize, end: usize) -> bool {
+fn _lies_in_range(id: usize, start: usize, end: usize) -> bool {
     start <= id && id <= end
 }
 
 fn _lies_in_any_range(id: usize, ranges: &[(usize, usize)]) -> bool {
-    ranges.iter().any(|&(start, end)| lies_in_range(id, start, end))
+    ranges
+        .iter()
+        .any(|&(start, end)| _lies_in_range(id, start, end))
 }
 
 fn _count_fresh(ids: &[usize], ranges: &[(usize, usize)]) -> usize {
-    ids.iter().filter(|&&id| _lies_in_any_range(id, &ranges)).count()
+    ids.iter()
+        .filter(|&&id| _lies_in_any_range(id, &ranges))
+        .count()
 }
 
 pub fn _part_1() {
-    let (ranges, ingredients) = get_input();
-    println!("There are {} fresh ingredients", _count_fresh(&ingredients, &ranges));
+    let (ranges, ingredients) = _get_input();
+    println!(
+        "There are {} fresh ingredients",
+        _count_fresh(&ingredients, &ranges)
+    );
 }
 
-fn combine_ranges(ranges: &mut Vec<(usize, usize)>, (new_start, new_end): (usize, usize)) {
+fn _combine_ranges(ranges: &mut Vec<(usize, usize)>, (new_start, new_end): (usize, usize)) {
     // We can remove any ranges that lie entirely within this new range
     let mut current_idx = 0;
     while current_idx < ranges.len() {
         let (start, end) = ranges[current_idx];
-        if lies_in_range(start, new_start, new_end) && lies_in_range(end, new_start, new_end) {
+        if _lies_in_range(start, new_start, new_end) && _lies_in_range(end, new_start, new_end) {
             ranges.swap_remove(current_idx);
         } else {
             current_idx += 1;
@@ -56,10 +60,12 @@ fn combine_ranges(ranges: &mut Vec<(usize, usize)>, (new_start, new_end): (usize
     // There are some tricky edge cases here. First I want to check to see if this new range
     // joins any existing ranges together - this will happen if the endpoints lie in different
     // ranges.
-    let range_containing_start_idx_opt = ranges.iter()
-        .position(|&(start, end)| lies_in_range(new_start, start, end));
-    let range_containing_end_idx_opt = ranges.iter()
-        .position(|&(start, end)| lies_in_range(new_end, start, end));
+    let range_containing_start_idx_opt = ranges
+        .iter()
+        .position(|&(start, end)| _lies_in_range(new_start, start, end));
+    let range_containing_end_idx_opt = ranges
+        .iter()
+        .position(|&(start, end)| _lies_in_range(new_end, start, end));
     // These should be unique - any given number should only fall within a single range, otherwise
     // there's an overlap that we should have removed already
 
@@ -105,23 +111,29 @@ fn combine_ranges(ranges: &mut Vec<(usize, usize)>, (new_start, new_end): (usize
     }
 }
 
-fn remove_overlaps(ranges: &[(usize, usize)]) -> Vec<(usize, usize)> {
+fn _remove_overlaps(ranges: &[(usize, usize)]) -> Vec<(usize, usize)> {
     let mut result = Vec::new();
     for &new_range in ranges {
-        combine_ranges(&mut result, new_range);
+        _combine_ranges(&mut result, new_range);
     }
     result
 }
 
-fn size((start, end): (usize, usize)) -> usize {
+fn _size((start, end): (usize, usize)) -> usize {
     end - start + 1
 }
 
-fn count_all_fresh(ranges: &[(usize, usize)]) -> usize {
-    remove_overlaps(ranges).iter().map(|&range| size(range)).sum()
+fn _count_all_fresh(ranges: &[(usize, usize)]) -> usize {
+    _remove_overlaps(ranges)
+        .iter()
+        .map(|&range| _size(range))
+        .sum()
 }
 
-pub fn part_2() {
-    let (ranges, _) = get_input();
-    println!("There are {} possible fresh ingredients", count_all_fresh(&ranges));
+pub fn _part_2() {
+    let (ranges, _) = _get_input();
+    println!(
+        "There are {} possible fresh ingredients",
+        _count_all_fresh(&ranges)
+    );
 }
